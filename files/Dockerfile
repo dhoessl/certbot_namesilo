@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim
 
-RUN sudo apt update && sudo apt install -y python3 python3-pip && apt-get clean
+RUN apt update && apt install -y python3 python3-pip && apt-get clean
 
 RUN pip3 install xmltodict certbot
 
