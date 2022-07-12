@@ -1,0 +1,29 @@
+---
+- name: 'run the certbot container'
+  docker_container:
+    name: 'certbot-namesilo'
+    image: 'certbot-namesilo'
+    auto_remove: true
+    pull: true
+    volumes:
+      - '/etc/letsencrypt:/etc/letsencrypt'
+    env:
+      CERTBOT_EMAIL: '{{ certbot_email }}'
+      CERTBOT_NAMESILO_API_KEY: '{{ certbot_namesilo_apikey }}'
+
+- name: 'get service states'
+  service_facts:
+  register: 'service_states'
+
+- name: 'restart nginx'
+  systemd:
+    state: 'restarted'
+    name: 'nginx'
+  when: 'service_states[''ansible_facts''][''services''][''nginx.service''][''state''] == ''running'''
+
+- name: 'restart apache2'
+  systemd:
+    state: 'restarted'
+    name: 'apache2'
+  when: 'service_states[''ansible_facts''][''services''][''apache2.service''][''state''] == ''running'''
+...

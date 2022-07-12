@@ -1,0 +1,25 @@
+---
+- name: 'create folder'
+  file:
+    path: '{{ certbot_docker_host_dir }}/{{ item }}'
+    state: 'directory'
+  loop:
+    - 'data'
+
+- name: 'copy files'
+  copy:
+    src: 'files/{{ item.name }}'
+    dest: '{{ certbot_docker_host_dir }}/data/{{ item.name }}'
+    mode: '{{ item.mode }}'
+  loop:
+    - name: 'namesiloapi.py'
+      mode: '0774'
+    - name: 'authenticator.py'
+      mode: '0774'
+    - name: 'cleanup.py'
+      mode: '0774'
+    - name: 'Dockerfile'
+      mode: '0644'
+    - name: 'certbot-run.py'
+      mode: '0774'
+...

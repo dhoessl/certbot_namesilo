@@ -1,0 +1,3 @@
+---
+certbot_docker_host_dir: '/var/lib/certbot-namesilo'
+...

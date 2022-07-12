@@ -1,0 +1,21 @@
+---
+- name: 'check for vars'
+  fail:
+    msg: 'Please set certbot_namesilo_apikey (vault) and certbot_email'
+    when: 'certbot_namesilo_apikey is not defined or certbot_email is not defined'
+
+- name: 'prepare container build'
+  include_tasks: 'prepare_filesystem.yaml'
+  tags:
+    - 'certbot:filesystem'
+
+- name: 'create image'
+  include_tasks: 'create_image.yaml'
+  tags:
+    - 'certbot:image'
+
+- name: 'run certbot'
+  include_tasks: 'create_container.yaml'
+  tags:
+    - 'certbot:run'
+...

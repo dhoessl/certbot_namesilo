@@ -1,0 +1,9 @@
+---
+- name: 'Create Cerbot Image'
+  docker_image:
+    name: 'certbot-namesilo'
+    source: 'build'
+    build:
+      path: '{{ certbot_docker_host_dir }}/data'
+      pull: true
+...
