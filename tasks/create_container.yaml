@@ -27,6 +27,6 @@
     state: 'restarted'
     name: 'apache2'
   when:
-    - '''nginx.service'' in service_states[''ansible_facts''][''services'']'
+    - '''apache2.service'' in service_states[''ansible_facts''][''services'']'
     - 'service_states[''ansible_facts''][''services''][''apache2.service''][''state''] == ''running'''
 ...
