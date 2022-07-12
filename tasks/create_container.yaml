@@ -4,7 +4,6 @@
     name: 'certbot-namesilo'
     image: 'certbot-namesilo'
     auto_remove: true
-    pull: true
     volumes:
       - '/etc/letsencrypt:/etc/letsencrypt'
     env:
@@ -19,11 +18,15 @@
   systemd:
     state: 'restarted'
     name: 'nginx'
-  when: 'service_states[''ansible_facts''][''services''][''nginx.service''][''state''] == ''running'''
+  when:
+    - '''nginx.service'' in service_states[''ansible_facts''][''services'']'
+    - 'service_states[''ansible_facts''][''services''][''nginx.service''][''state''] == ''running'''
 
 - name: 'restart apache2'
   systemd:
     state: 'restarted'
     name: 'apache2'
-  when: 'service_states[''ansible_facts''][''services''][''apache2.service''][''state''] == ''running'''
+  when:
+    - '''nginx.service'' in service_states[''ansible_facts''][''services'']'
+    - 'service_states[''ansible_facts''][''services''][''apache2.service''][''state''] == ''running'''
 ...
