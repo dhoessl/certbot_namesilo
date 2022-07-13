@@ -6,7 +6,7 @@ ansible role to create a container managing certificates for domains on namesilo
 1. Add this role as submodule to your playbook.
 
 ```bash
-git add submodule https://github.com/dhoessl/certbot_namesilo.git roles/certbot_namesilo
+git submodule add https://github.com/dhoessl/certbot_namesilo.git roles/certbot_namesilo
 ```
 2. Add it to the play
 
