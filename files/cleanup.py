@@ -5,31 +5,22 @@ from os import environ
 
 
 def cleanup_record():
-    record_id = None
     API = naw(environ['CERTBOT_NAMESILO_API_KEY'])
     api_result = API.listRecords(environ['CERTBOT_DOMAIN'])
-    if 'NO DNS ' in api_result['namesilo']['reply']['detail']:
+    if 'NO DNS ' in api_result['reply']['detail']:
         exit(0)
-    elif api_result['namesilo']['reply']['detail'] != 'success':
+    elif api_result['reply']['detail'] != 'success':
         exit(1)
-    if api_result['namesilo']['reply']['resource_record']:
-        for record in api_result['namesilo']['reply']['resource_record']:
-            if record_id is not None:
-                break
-            if isinstance(record, str):
-                continue
-            for subdomain_field in record:
-                if (subdomain_field == 'host'
-                        and record['host'] == '_acme-challenge.' + environ['CERTBOT_DOMAIN']):  # noqa: E501
-                    record_id = record['record_id']
-    if record_id:
-        delete_record(record_id)
-    else:
-        exit(0)
+    rr_set = api_result["reply"]["resource_record"]
+    if isinstance(rr_set, dict):
+        rr_set = [rr_set]
+    for record in rr_set:
+        if record["host"] == "_acme-challenge." + environ["CERTBOT_DOMAIN"]:
+            delete_record(API, record["record_id"])
+    exit(0)
 
 
-def delete_record(record_id):
-    API = naw(environ['CERTBOT_NAMESILO_API_KEY'])
+def delete_record(API, record_id):
     API.deleteRecord(
             environ['CERTBOT_DOMAIN'],
             record_id
