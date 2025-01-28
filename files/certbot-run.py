@@ -2,16 +2,19 @@
 
 from subprocess import check_output, DEVNULL
 from datetime import datetime
-from os import environ
+from os import environ, path, remove
+import logging
 
 
 def check_domains():
+    logging.info("Checking for Domain renewal")
     renew_certs = []
     wildcard_certs = check_output(
         ['certbot', 'certificates'],
         stderr=DEVNULL
-    ).decode().split('\n')
-    for line in wildcard_certs:
+    )
+    logging.info(wildcard_certs.decode())
+    for line in wildcard_certs.decode().split('\n'):
         if '*.' not in line:
             continue
         cert_data = check_output(
@@ -28,7 +31,8 @@ def check_domains():
 
 def renew_domains(domain_list):
     for domain in domain_list:
-        check_output(
+        logging.info("Renew Domain: " + domain)
+        output = check_output(
             [
                 'certbot', 'certonly', '--manual',
                 '--email', environ['CERTBOT_EMAIL'],
@@ -39,12 +43,28 @@ def renew_domains(domain_list):
             ],
             stderr=DEVNULL
         )
+        logging.info(output.decode())
 
 
 def main():
+    logging.info("Start renew")
+    # Fetch domains to renew
     domains_to_renew = check_domains()
+    # Renew previously fetched Domains
     renew_domains(domains_to_renew)
 
 
 if __name__ == '__main__':
+    # Comment next 3 lines if you want to keep all logs
+    # This is just to look at logs if some error occurs
+    logfile = "/etc/letsencrypt/certbot_run.log"
+    if path.exists(logfile):
+        remove(logfile)
+    # Create logger
+    logging.basicConfig(
+        filename=logfile,
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
+    # Start the main function
     main()

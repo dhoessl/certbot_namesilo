@@ -3,9 +3,11 @@ from namesiloapi import NamesiloApiWrapper as naw
 from dns.resolver import resolve
 from os import environ
 from time import sleep
+import logging
 
 
 def set_record(API) -> bool:
+    logging.info("Set Record")
     api_result = API.listRecords(environ['CERTBOT_DOMAIN'])
     if api_result['reply']['detail'] != 'success':
         exit(1)
@@ -26,6 +28,7 @@ def set_record(API) -> bool:
 
 
 def change_record(API, rrid):
+    logging.info("UPDATE Record")
     API.updateRecord(
         environ['CERTBOT_DOMAIN'],
         rrid,
@@ -35,6 +38,7 @@ def change_record(API, rrid):
 
 
 def create_record(API):
+    logging.info("CREATE Record")
     API.addRecord(
         environ['CERTBOT_DOMAIN'],
         'TXT',
@@ -44,19 +48,36 @@ def create_record(API):
 
 
 def check_if_record_exists():
+    logging.info("Check for Record")
     record_exists = False
     tries = 0
     while record_exists is False and tries < 15:
         answer = resolve("_acme-challenge." + environ["CERTBOT_DOMAIN"], "TXT")
         for entry in answer:
             if environ["CERTBOT_VALIDATION"] in answer.to_text():
+                logging.info("Record found")
                 record_exists = True
         if not record_exists:
+            logging.info("Record not yet found ... waiting ...")
             tries += 1
             sleep(600)
 
 
+def check_env_vars() -> None:
+    logging.info("======\nChecking Env Vars\n======")
+    if "CERTBOT_NAMESILO_API_KEY" in environ:
+        logging.info("CERTBOT_NAMESILO_API_KEY: (redacted and found)")
+    else:
+        logging.info("CERTBOT_NAMESILO_API_KEY: (not found)")
+    logging.info("CERBOT_EMAIL: " + environ["CERTBOT_EMAIL"])
+    logging.info("CERBOT_DOMAIN: " + environ["CERBOT_DOMAIN"])
+    logging.info("CERTBOT_VALIDATION: " + environ["CERTBOT_VALIDATION"])
+
+
 if __name__ == '__main__':
+    logging.info("Starting Authenticator")
+    if "CERTBOT_CUSTOM_DEBUG" in environ and environ["CERTBOT_CUSTOM_DEBUG"]:
+        check_env_vars()
     API = naw(environ['CERTBOT_NAMESILO_API_KEY'])
     set_record(API)
     check_if_record_exists()
