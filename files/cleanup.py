@@ -22,8 +22,8 @@ def cleanup_record():
 
 def delete_record(API, record_id):
     API.deleteRecord(
-            environ['CERTBOT_DOMAIN'],
-            record_id
+        environ['CERTBOT_DOMAIN'],
+        record_id
     )
 
 
