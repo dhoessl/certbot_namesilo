@@ -1,6 +1,6 @@
 ---
 - name: 'run the certbot container'
-  communtiy.docker.docker_container:
+  communitiy.docker.docker_container:
     name: 'certbot-namesilo'
     image: 'certbot-namesilo'
     auto_remove: true
