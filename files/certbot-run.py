@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from subprocess import check_output, DEVNULL, CalledProcessError
+from subprocess import check_output, DEVNULL, CalledProcessError, STDOUT
 from datetime import datetime
 from os import environ, path, remove
 import logging
@@ -40,12 +40,12 @@ def renew_domains(domain_list):
                     '--agree-tos', '--preferred-challenges=dns',
                     '--manual-auth-hook', './authenticator.py',
                     '--manual-cleanup-hook', './cleanup.py',
-                    '--manual-public-ip-logging-ok', '-d', domain
-                ]
+                    '-d', domain
+                ],
+                stderr=STDOUT
             )
-        except CalledProcessError:
-            logging.error(output.stderr.decode())
-            exit(1)
+        except CalledProcessError as cpe:
+            logging.error(f"{cpe.output.decode()}")
         logging.info(output.decode())
 
 

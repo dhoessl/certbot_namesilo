@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim
 
-RUN apt update && apt install -y python3 python3-certbot python3-dnspython && apt-get clean
+RUN apt update && apt install -y python3 certbot python3-dnspython && apt-get clean
 
 
 COPY ./namesiloapi.py /root/namesiloapi.py
