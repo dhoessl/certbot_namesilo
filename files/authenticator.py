@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from namesiloapi import NamesiloApiWrapper as naw
-from dns.resolver import resolve
+from dns.resolver import resolve, NXDOMAIN
 from os import environ
 from time import sleep
 import logging
@@ -52,13 +52,17 @@ def check_if_record_exists():
     record_exists = False
     tries = 0
     while record_exists is False and tries < 15:
-        answer = resolve("_acme-challenge." + environ["CERTBOT_DOMAIN"], "TXT")
-        for entry in answer:
-            if environ["CERTBOT_VALIDATION"] in answer.to_text():
-                logging.info("Record found")
-                record_exists = True
-        if not record_exists:
-            logging.info("Record not yet found ... waiting ...")
+        try:
+            answer = resolve("_acme-challenge." + environ["CERTBOT_DOMAIN"], "TXT")
+            for entry in answer:
+                if environ["CERTBOT_VALIDATION"] in answer.to_text():
+                    logging.info("Record found")
+                    record_exists = True
+        except NXDOMAIN:
+            logging.info(
+                "Record not yet found ... waiting 600 sec ... "
+                f"checked {tries + 1} times"
+            )
             tries += 1
             sleep(600)
 
