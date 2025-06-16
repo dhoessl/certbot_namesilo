@@ -9,6 +9,7 @@ import logging
 def set_record(API) -> bool:
     logging.info(f"Set Record for {environ['CERTBOT_DOMAIN']}")
     api_result = API.listRecords(environ['CERTBOT_DOMAIN'])
+    logging.info(f"First Api Call result: {api_result['reply']['detail']}")
     if api_result['reply']['detail'] != 'success':
         logging.error(f"Error while setting Record for {environ['CERTBOT_DOMAIN']}")
         exit(1)
@@ -16,7 +17,7 @@ def set_record(API) -> bool:
         create_record(API)
         return True
     rr_set = api_result["reply"]["resource_record"]
-    # If its a singel RR set then it must be changed from dict to list
+    # If its a single RR set then it must be changed from dict to list
     if isinstance(rr_set, dict):
         rr_set = [rr_set]
     if not rr_set:
