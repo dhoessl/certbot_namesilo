@@ -30,7 +30,6 @@ def set_record(API) -> bool:
     return True
 
 
-
 def change_record(API, rrid):
     logging.info("UPDATE Record")
     API.updateRecord(
@@ -59,7 +58,7 @@ def check_if_record_exists():
         try:
             answer = resolve("_acme-challenge." + environ["CERTBOT_DOMAIN"], "TXT")
             for entry in answer:
-                if environ["CERTBOT_VALIDATION"] in answer.to_text():
+                if environ["CERTBOT_VALIDATION"] in answer.response.to_text():
                     logging.info("Record found")
                     record_exists = True
         except NXDOMAIN:
