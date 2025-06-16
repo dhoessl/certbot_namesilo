@@ -32,4 +32,11 @@ def delete_record(API, record_id):
 
 
 if __name__ == '__main__':
+    logfile = "/etc/letsencrypt/certbot_run.log"
+    # Create logger
+    logging.basicConfig(
+        filename=logfile,
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
     cleanup_record()

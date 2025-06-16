@@ -79,6 +79,12 @@ def check_env_vars() -> None:
 
 
 if __name__ == '__main__':
+    logfile = "/etc/letsencrypt/certbot_run.log"
+    logging.basicConfig(
+        filename=logfile,
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
     logging.info("Starting Authenticator")
     if "CERTBOT_CUSTOM_DEBUG" in environ and environ["CERTBOT_CUSTOM_DEBUG"]:
         check_env_vars()
