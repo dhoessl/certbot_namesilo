@@ -7,9 +7,10 @@ import logging
 
 
 def set_record(API) -> bool:
-    logging.info("Set Record")
+    logging.info(f"Set Record for {environ['CERTBOT_DOMAIN']}")
     api_result = API.listRecords(environ['CERTBOT_DOMAIN'])
     if api_result['reply']['detail'] != 'success':
+        logging.error(f"Error while setting Record for {environ['CERTBOT_DOMAIN']}")
         exit(1)
     if 'NO DNS ' in api_result['reply']['detail']:
         create_record(API)
