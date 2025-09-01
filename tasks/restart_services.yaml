@@ -11,6 +11,8 @@
   ansible.builtin.debug:
     msg: "{{ item }}"
   loop: "{{ certbot_restart_services }}"
+  tags:
+    - "certbot:post-run"
 
 - name: "Restart Services"
   ansible.builtin.systemd:
