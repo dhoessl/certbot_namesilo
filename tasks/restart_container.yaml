@@ -2,7 +2,8 @@
 - name: "Restart Container"
   community.docker.docker_container:
     name: "{{ item }}"
-    state: "restarted"
+    state: "started"
+    restart: true
   loop: "{{ certbot_restart_container }}"
   tags:
     - "certbot:post-run"
