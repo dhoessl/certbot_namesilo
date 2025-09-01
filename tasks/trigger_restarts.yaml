@@ -1,0 +1,11 @@
+---
+- name: "Read Log for renewals"
+  ansible.builtin.slurp:
+    src: "/etc/letsencrypt/certbot_run.log"
+  register: "certbot_run_log"
+
+- name: "Debug"
+  ansible.builtin.debug:
+    var: "{{ item }}"
+  loop: "certbot_run_log"
+...
