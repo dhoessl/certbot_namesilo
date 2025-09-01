@@ -14,7 +14,7 @@
   when:
     - "item in ansible_facts['services']"
     - "ansible_facts['services'][item]['state'] == 'running'"
-  loop: "{{ cerbot_restart_services }}"
+  loop: "{{ certbot_restart_services }}"
   tags:
     - "certbot:post-run"
 ...

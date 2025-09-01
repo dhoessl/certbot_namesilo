@@ -9,16 +9,4 @@
     env:
       CERTBOT_EMAIL: '{{ certbot_email }}'
       CERTBOT_NAMESILO_API_KEY: '{{ certbot_namesilo_apikey }}'
-
-- name: 'get service states'
-  ansible.builtin.service_facts:
-  register: 'service_states'
-
-- name: 'restart nginx'
-  systemd:
-    state: 'restarted'
-    name: 'nginx'
-  when:
-    - "'nginx.service' in service_states['ansible_facts']['services']"
-    - "service_states['ansible_facts']['services']['nginx.service']['state'] == 'running'"
 ...
