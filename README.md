@@ -45,3 +45,10 @@ Then there will be a one time container deployed, mounting `/etc/letsencrypt` an
 If this certificates are close to expiry, it will be renewed.
 
 This container need to be run manually every now and then or just use a pipeline to run it everyday and forget about it.
+
+# Restarting Services and Container
+If you want to restart a specific service or container after renewal add it to `certbot_restart_services` or `certbot_restart_container` list.
+
+For service it will be checked if the services in running otherwise the service wont be started.
+
+Containers wont be checked so make sure to set the correct names.
