@@ -1,2 +1,20 @@
 ---
+# Populate Service states
+# yamllint disable rule:empty-values
+- name: "Get Service States"
+  ansible.builtin.service_facts:
+  tags:
+    - "certbot:post-run"
+# yamllint enable rule:empty-values
+
+- name: "Restart Services"
+  ansible.builtin.systemd:
+    state: "restarted"
+    name: "{{ item }}"
+  when:
+    - "item in ansible_facts['services']"
+    - "ansible_facts['services'][item]['state'] == 'running'"
+  loop: "{{ cerbot_restart_services }}"
+  tags:
+    - "certbot:post-run"
 ...

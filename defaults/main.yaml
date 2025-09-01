@@ -1,3 +1,5 @@
 ---
 certbot_docker_host_dir: '/var/lib/certbot-namesilo'
+certbot_restart_services: []
+certbot_restart_container: []
 ...
