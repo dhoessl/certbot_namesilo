@@ -1,26 +1,26 @@
 ---
 - name: "Check for vars"
-  fail:
+  ansible.builtin.fail:
     msg: "Please set certbot_namesilo_apikey (vault) and certbot_email"
   when: "certbot_namesilo_apikey is not defined or certbot_email is not defined"
 
 - name: "Prepare container build"
-  include_tasks: "prepare_filesystem.yaml"
+  ansible.builtin.include_tasks: "prepare_filesystem.yaml"
   tags:
     - "certbot:filesystem"
 
 - name: "Create image"
-  include_tasks: "create_image.yaml"
+  ansible.builtin.include_tasks: "create_image.yaml"
   tags:
     - "certbot:image"
 
 - name: "Run certbot"
-  include_tasks: "create_container.yaml"
+  ansible.builtin.include_tasks: "create_container.yaml"
   tags:
     - "certbot:run"
 
 - name: "Trigger Service Restart"
-  include_tasks: "trigger_restarts.yaml"
+  ansible.builtin.include_tasks: "trigger_restarts.yaml"
   tags:
     - "certbot:run"
     - "certbot:post-run"

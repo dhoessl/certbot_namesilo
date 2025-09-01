@@ -8,13 +8,24 @@
 
 - name: "Set log as list"
   ansible.builtin.set_fact:
-    log_list: "{{ cerbot_run_log['content'] | b64decode | split('\n') }}"
+    log_list: "{{ certbot_run_log['content'] | b64decode | split('\n') }}"
   tags:
     - "certbot:post-run"
 
 - name: "Debug"
   ansible.builtin.debug:
     msg: "{{ log_list }}"
+  tags:
+    - "certbot:post-run"
+  when: "'Domains' in certbot_run_log['content'] | b64decode"
+
+- name: "Restart Services"
+  ansible.builtin.include_tasks: "restart_services.yaml"
+  tags:
+    - "certbot:post-run"
+
+- name: "Restart Container"
+  ansible.builtin.include_tasks: "restart_container.yaml"
   tags:
     - "certbot:post-run"
 ...
