@@ -3,9 +3,18 @@
   ansible.builtin.slurp:
     src: "/etc/letsencrypt/certbot_run.log"
   register: "certbot_run_log"
+  tags:
+    - "certbot:post-run"
+
+- name: "Set log as list"
+  ansible.builtin.set_fact:
+    log_list: "{{ cerbot_run_log['content'] | b64decode | split('\n') }}"
+  tags:
+    - "certbot:post-run"
 
 - name: "Debug"
   ansible.builtin.debug:
-    var: "{{ item }}"
-  loop: "certbot_run_log"
+    msg: "{{ log_list }}"
+  tags:
+    - "certbot:post-run"
 ...
