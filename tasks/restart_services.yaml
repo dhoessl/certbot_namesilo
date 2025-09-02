@@ -4,6 +4,7 @@
 - name: "Get Service States"
   ansible.builtin.service_facts:
   tags:
+    - "certbot:run"
     - "certbot:post-run"
 # yamllint enable rule:empty-values
 
@@ -16,5 +17,6 @@
     - "ansible_facts['services'][item]['state'] == 'running'"
   loop: "{{ certbot_restart_services }}"
   tags:
+    - "certbot:run"
     - "certbot:post-run"
 ...

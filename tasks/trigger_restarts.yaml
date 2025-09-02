@@ -4,17 +4,20 @@
     src: "/etc/letsencrypt/certbot_run.log"
   register: "certbot_run_log"
   tags:
+    - "certbot:run"
     - "certbot:post-run"
 
 - name: "Restart Services"
   ansible.builtin.include_tasks: "restart_services.yaml"
   when: "'Renew Domain:' in certbot_run_log['content'] | b64decode"
   tags:
+    - "certbot:run"
     - "certbot:post-run"
 
 - name: "Restart Container"
   ansible.builtin.include_tasks: "restart_container.yaml"
   when: "'Renew Domain:' in certbot_run_log['content'] | b64decode"
   tags:
+    - "certbot:run"
     - "certbot:post-run"
 ...

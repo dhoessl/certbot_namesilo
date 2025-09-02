@@ -6,5 +6,6 @@
     restart: true
   loop: "{{ certbot_restart_container }}"
   tags:
+    - "certbot:run"
     - "certbot:post-run"
 ...

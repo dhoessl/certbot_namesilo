@@ -1,0 +1,37 @@
+---
+- name: "Read Log for renewals"
+  ansible.builtin.slurp:
+    src: "/etc/letsencrypt/certbot_run.log"
+  register: "certbot_run_log"
+  tags:
+    - "certbot:run"
+    - "certbot:post-run"
+
+- name: "Copy Pub Certificates"
+  ansible.builtin.copy:
+    src: "/etc/letsencrypt/live/{{ item.domain }}/fullchain.pem"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0644') }}"
+  loop: "{{ certbot_pubkey_copy }}"
+  when:
+    - "'Renew Domain: {{ item.domain }}' in certbot_run_log['content'] | b64decode"
+  tags:
+    - "certbot:run"
+    - "certbot:post-run"
+
+- name: "Copy Priv Certificates"
+  ansible.builtin.copy:
+    src: "/etc/letsencrypt/live/{{ item.domain }}/privkey.pem"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0600') }}"
+  loop: "{{ certbot_privkey_copy }}"
+  when:
+    - "'Renew Domain: {{ item.domain }}' in certbot_run_log['content'] | b64decode"
+  tags:
+    - "certbot:run"
+    - "certbot:post-run"
+...

@@ -19,6 +19,12 @@
   tags:
     - "certbot:run"
 
+- name: "Copy Certificate to places"
+  ansible.builtin.include_tasks: "provide_certificates.yaml"
+  tags:
+    - "certbot:run"
+    - "certbot:post-run"
+
 - name: "Trigger Service Restart"
   ansible.builtin.include_tasks: "trigger_restarts.yaml"
   tags:
