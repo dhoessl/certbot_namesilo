@@ -16,7 +16,7 @@
     mode: "{{ item.mode | default('0644') }}"
   loop: "{{ certbot_pubkey_copy }}"
   when:
-    - "'Renew Domain: {{ item.domain }}' in certbot_run_log['content'] | b64decode"
+    - "\"Renew Domain:\" in certbot_run_log['content'] | b64decode"
   tags:
     - "certbot:run"
     - "certbot:post-run"
@@ -30,7 +30,7 @@
     mode: "{{ item.mode | default('0600') }}"
   loop: "{{ certbot_privkey_copy }}"
   when:
-    - "'Renew Domain: {{ item.domain }}' in certbot_run_log['content'] | b64decode"
+    - "\"Renew Domain:\" in certbot_run_log['content'] | b64decode"
   tags:
     - "certbot:run"
     - "certbot:post-run"
