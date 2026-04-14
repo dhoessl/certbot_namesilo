@@ -14,11 +14,8 @@
   ansible.builtin.command:
     cmd: "docker container inspect certbot-namesilo"
   register: "inspect"
-  retries: 10
+  retries: 200
   delay: 3
-  until: >
-    inspect is failed
-    or (inspect.stdout is succeeded
-    and (inspect.stdout | from_json).State.Running == false)
+  until: "inspect is failed"
   changed_when: false
 ...
