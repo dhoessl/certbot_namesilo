@@ -17,5 +17,6 @@
   retries: 200
   delay: 3
   until: "inspect is failed"
+  ignore_errors: true
   changed_when: false
 ...
