@@ -9,7 +9,7 @@
 # yamllint enable rule:empty-values
 
 - name: "Restart Services"
-  ansible.builtin.systemd:
+  ansible.builtin.systemd_service:
     state: "restarted"
     name: "{{ item }}"
   when:
