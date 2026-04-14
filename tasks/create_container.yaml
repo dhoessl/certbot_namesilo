@@ -1,12 +1,24 @@
 ---
-- name: 'run the certbot container'
+- name: "Run the certbot container"
   community.docker.docker_container:
-    name: 'certbot-namesilo'
-    image: 'certbot-namesilo'
+    name: "certbot-namesilo"
+    image: "certbot-namesilo"
     auto_remove: true
     volumes:
-      - '/etc/letsencrypt:/etc/letsencrypt'
+      - "/etc/letsencrypt:/etc/letsencrypt"
     env:
-      CERTBOT_EMAIL: '{{ certbot_email }}'
-      CERTBOT_NAMESILO_API_KEY: '{{ certbot_namesilo_apikey }}'
+      CERTBOT_EMAIL: "{{ certbot_email }}"
+      CERTBOT_NAMESILO_API_KEY: "{{ certbot_namesilo_apikey }}"
+
+- name: "Wait for container to exit"
+  ansible.builtin.command:
+    cmd: "docker container inspect certbot-namesilo"
+  register: "inspect"
+  retries: 10
+  delay: 3
+  until: >
+    inspect is failed
+    or (inspect.stdout is succeeded
+    and (inspect.stdout | from_json).State.Running == false)
+  changed_when: false
 ...
